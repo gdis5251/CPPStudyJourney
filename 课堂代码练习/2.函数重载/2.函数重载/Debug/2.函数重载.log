@@ -1,0 +1,4 @@
+﻿  Main.cpp
+Main.obj : error LNK2019: 无法解析的外部符号 "int __cdecl add(int,int)" (?add@@YAHHH@Z)，该符号在函数 _main 中被引用
+Main.obj : error LNK2019: 无法解析的外部符号 "int __cdecl add(double,double)" (?add@@YAHNN@Z)，该符号在函数 _main 中被引用
+F:\C++\CPPStudyJourney\课堂代码练习\2.函数重载\Debug\2.函数重载.exe : fatal error LNK1120: 2 个无法解析的外部命令
