@@ -118,6 +118,38 @@ public :
 		return copy;
 	}
 
+	int operator-(const Date& d)
+	{
+		int count = 0;
+
+		if (*this >= d)
+		{
+			Date copy(d);
+			while (1)
+			{
+				if (*this == copy)
+					break;
+
+				copy++;
+				count++;
+			}
+		}
+		else
+		{
+			Date copy(*this);
+			while (1)
+			{
+				if (d == copy)
+					break;
+
+				copy++;
+				count++;
+			}
+		}
+		
+		return count;
+	}
+
 	//«∞÷√++
 	Date& operator++()
 	{
