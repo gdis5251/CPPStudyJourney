@@ -1,15 +1,22 @@
 class Date
 {
 public :
-	//¹¹Ôìº¯Êı
+	//æ„é€ å‡½æ•°
 	Date(int year = 1900, int month = 1, int day = 1)
 	{
+		if (year <= 0 || month > 12 || day < 1 || day > getMonthDay(month))
+		{
+			std::cout<<"Date set to 1900-1-1"<<std::endl;
+			_year = 1900;
+			_month = 1;
+			_day = 1;
+		}
 		_year = year;
 		_month = month;
 		_day = day;
 	}
 
-	//¿½±´¹¹Ôìº¯Êı
+	//æ‹·è´æ„é€ å‡½æ•°
 	Date(const Date& d)
 	{
 		_year = d._year;
@@ -17,7 +24,7 @@ public :
 		_day = d._day;
 	}
 
-	//¸³ÖµÖØ¶¨Òåº¯Êı
+	//èµ‹å€¼é‡å®šä¹‰å‡½æ•°
 	Date& operator=(const Date& d)
 	{
 		if (this != &d)
@@ -103,7 +110,7 @@ public :
 
 	Date operator+(int day)
 	{
-		//ÒòÎª+²»¸Ä±ä×ÔÉíµÄÖµ£¬ËùÒÔĞèÒª¿½±´Ò»¸öÀà½øĞĞ¼Ó·¨£¬·µ»Ø¿½±´µÄÀà
+		//å› ä¸º+ä¸æ”¹å˜è‡ªèº«çš„å€¼ï¼Œæ‰€ä»¥éœ€è¦æ‹·è´ä¸€ä¸ªç±»è¿›è¡ŒåŠ æ³•ï¼Œè¿”å›æ‹·è´çš„ç±»
 		Date copy(*this);
 		copy.operator+=(day);
 
@@ -150,7 +157,7 @@ public :
 		return count;
 	}
 
-	//Ç°ÖÃ++
+	//å‰ç½®++
 	Date& operator++()
 	{
 		this->operator+=(1);
@@ -158,7 +165,7 @@ public :
 		return *this;
 	}
 
-	//ºóÖÃ++
+	//åç½®++
 	Date operator++(int)
 	{
 		Date copy(*this);
@@ -167,14 +174,14 @@ public :
 		return copy;
 	}
 
-	//Ç°ÖÃ--
+	//å‰ç½®--
 	Date& operator--()
 	{
 		this->operator-=(1);
 		return *this;
 	}
 
-	//ºóÖÃ--
+	//åç½®--
 	Date operator--(int)
 	{
 		Date copy(*this);
@@ -272,13 +279,13 @@ private:
 	int _month;
 	int _day;
 	
-	//ÊÇ·ñÊÇÈòÄê
+	//æ˜¯å¦æ˜¯é—°å¹´
 	bool isLeapYear(int year)
 	{
 		return ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0);
 	}
 
-	//¸ÃÔÂµÄÌìÊı
+	//è¯¥æœˆçš„å¤©æ•°
 	int getMonthDay(const Date& d)
 	{
 		if (isLeapYear(d._year) && d._month == 2)
