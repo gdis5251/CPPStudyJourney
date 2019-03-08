@@ -4,10 +4,10 @@ public :
 	//构造函数
 	Date(int year = 1900, int month = 1, int day = 1)
 	{
-		
 		_year = year;
 		_month = month;
 		_day = day;
+		
 		if (year <= 0 || month > 12 || day < 1 || day > getMonthDay(*this))
 		{
 			std::cout<<"Date set to 1900-1-1"<<std::endl;
