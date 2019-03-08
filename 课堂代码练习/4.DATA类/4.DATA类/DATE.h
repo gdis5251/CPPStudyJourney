@@ -39,6 +39,11 @@ public :
 
 	Date& operator+=(int day)
 	{
+		if (day < 0)
+		{
+			*this -= -day;
+		}
+		
 		_day += day;
 
 		if (_day > getMonthDay(*this))
@@ -75,6 +80,11 @@ public :
 
 	Date& operator-=(int day)
 	{
+		if （day < 0)
+		{
+			return *this += -day;
+		}
+		
 		_day -= day;
 
 		if (_day < 1)
