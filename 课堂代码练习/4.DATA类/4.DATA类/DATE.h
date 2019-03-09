@@ -1,3 +1,5 @@
+#include <iostream>
+
 class Date
 {
 public :
@@ -46,33 +48,17 @@ public :
 		
 		_day += day;
 
-		if (_day > getMonthDay(*this))
+		
+		while (_day > getMonthDay(*this))
 		{
-			int count = 0;
-			Date copy(*this);
+			_day -= getMonthDay(*this);
 
-			while (1)
-			{
-				_day -= getMonthDay(copy);
-				count++;
-
-				copy._month += 1;
-				if (copy._month > 12)
-				{
-					copy._year += 1;
-					copy._month -= 12;
-				}
-
-				if (_day <= getMonthDay(copy))
-					break;
-			}
-
-			_month += count;
+			_month += 1;
 			if (_month > 12)
 			{
-				_year += (_month / 12);
-				_month %= 12;
-			}
+				_year += 1;
+				_month -= 12;
+			}	
 		}
 
 		return *this;
@@ -80,40 +66,23 @@ public :
 
 	Date& operator-=(int day)
 	{
-		if （day < 0)
+		if (day < 0)
 		{
 			return *this += -day;
 		}
 		
 		_day -= day;
 
-		if (_day < 1)
+		while (_day < 1)
 		{
-			int count = 0;
-			Date copy(*this);
-
-			while (1)
-			{
-				copy._month -= 1;
-				if (copy._month < 1)
-				{
-					copy._year -= 1;
-					copy._month = 12;
-				}
-
-				_day += getMonthDay(copy);
-				count++;
-
-				if (_day > 0)
-					break;
-			}
-
-			_month -= count;
+			_month -= 1;
 			if (_month < 1)
 			{
-				_year -= -((_month / 12) - 1);
-				_month = _month % 12 + 12;
+				_year -= 1;
+				_month = 12;
 			}
+
+			_day += getMonthDay(*this);
 		}
 
 		return *this;
@@ -233,32 +202,12 @@ public :
 
 	bool operator<(const Date& d)const
 	{
-		if (this->_year < d._year)
-			return true;
-		else if (this->_year == d._year &&
-			this->_month < d._month)
-			return true;
-		else if (this->_year == d._year &&
-			this->_month == d._month &&
-			this->_day < d._day)
-			return true;
-
-		return false;
+		return !(*this > d) && !(*this == d);
 	}
 
 	bool operator<=(const Date& d)const
 	{
-		if (this->_year < d._year)
-			return true;
-		else if (this->_year == d._year &&
-			this->_month < d._month)
-			return true;
-		else if (this->_year == d._year &&
-			this->_month == d._month &&
-			this->_day <= d._day)
-			return true;
-
-		return false;
+		return !(*this > d);
 	}
 
 	bool operator==(const Date& d)const
@@ -273,12 +222,7 @@ public :
 
 	bool operator!=(const Date& d)const
 	{
-		if (this->_year != d._year &&
-			this->_month != d._month &&
-			this->_day != d._day)
-			return true;
-
-		return false;
+		return !(*this == d);
 	}
 
 	
