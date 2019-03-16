@@ -12,7 +12,7 @@ void SeqList::SeqListInit(size_t capicity)
 
 void SeqList::SeqListDestory()
 {
-	delete _array;
+	delete[] _array;
 	_size = 0;
 	_capicity = 0;
 }
