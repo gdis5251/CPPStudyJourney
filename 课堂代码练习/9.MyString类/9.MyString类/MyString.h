@@ -1,8 +1,8 @@
 #ifndef _STRING_H_
 #define _STRING_H_
 
-#include <iostream>
 #include <assert.h>
+#include <string>
 
 #pragma warning(disable:4996)
 
@@ -12,6 +12,7 @@ namespace Gerald
 	{
 	public:
 
+		//iterator//////////////////
 		typedef char* iterator;
 		typedef const char* const_iterator;
 
@@ -24,7 +25,9 @@ namespace Gerald
 		{
 			return _str + _size;
 		}
+		//////////////////////////
 
+		//Member functions
 		String(const char *str = "")
 		{
 			_size = strlen(str);
@@ -39,16 +42,19 @@ namespace Gerald
 			if (_str)
 			{
 				delete[] _str;
+				_str = nullptr;
+				_size = 0;
+				_capacity = 0;
 			}
 		}
 
 
-		String(const char& str)
+		String(const String& s)
 			:_str(nullptr),
 			_size(0),
 			_capacity(0)
 		{
-			String tmp(str);
+			String tmp(s._str);
 			Swap(tmp);
 		}
 
@@ -58,7 +64,9 @@ namespace Gerald
 			Swap(s);
 			return *this;
 		}
+		/////////////////
 
+		//Modify
 		void push_back(char ch);
 		void append(const char *str);
 		String& operator+= (char ch);
@@ -67,7 +75,23 @@ namespace Gerald
 		size_t find(const char *str, size_t pos = 0);
 		void Insert(size_t pos, char ch);
 		void Insert(size_t pos, const char *str);
-		void Erase(size_t pos, size_t len = npos);
+		void Erase(size_t pos, size_t len = -1);
+		String substr(size_t pos, size_t len = -1);
+		
+		void clear()
+		{
+			_size = 0;
+			_str[0] = '\0';
+		}
+		
+		int empty() const
+		{
+			if (_size == 0)
+				return 1;
+
+			return 0;
+		}
+		
 		void Swap(String& s)
 		{
 			std::swap(_str, s._str);
@@ -110,14 +134,17 @@ namespace Gerald
 		void resize(size_t n, char ch = '\0');
 
 
+
 	private:
 		char *_str;
 		size_t _size;
 		size_t _capacity;
-		static const size_t npos;
-	};
 
-	//const size_t String::npos = -1;
+	public:
+		static const size_t npos;
+
+	};
+	const size_t Gerald::String::npos = -1;
 }
 
 #endif //_STRING_H_

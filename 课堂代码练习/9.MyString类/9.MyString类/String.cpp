@@ -74,6 +74,8 @@ Gerald::String& Gerald::String::operator+= (const char *str)
 
 size_t Gerald::String::find(char ch, size_t pos)
 {
+	assert(pos < _size);
+
 	for (pos; pos < _size; pos++)
 	{
 		if (_str[pos] == ch)
@@ -84,14 +86,12 @@ size_t Gerald::String::find(char ch, size_t pos)
 }
 size_t Gerald::String::find(const char *str, size_t pos)
 {
+	assert(pos < _size);
+
 	char *pstr = strstr(_str, str);
 	if (pstr)
 	{
-		for (pos; pos < _size; pos++)
-		{
-			if (&_str[pos] == pstr)
-				return pos;
-		}
+		return pstr - str;
 	}
 
 	return -1;
@@ -100,6 +100,7 @@ size_t Gerald::String::find(const char *str, size_t pos)
 
 void Gerald::String::Insert(size_t pos, char ch)
 {
+
 	if (_size == _capacity)
 		reserve(2 * _capacity);
 
@@ -157,4 +158,21 @@ void Gerald::String::Erase(size_t pos, size_t len)
 
 	_size -= len;
 	_str[_size] = '\0';
+}
+
+
+Gerald::String Gerald::String::substr(size_t pos, size_t len)
+{
+	if (_size - pos < len)
+		len = _size - pos;
+
+	String sub;
+	sub.reserve(len);
+
+	for (size_t i = pos; i < pos + len; i++)
+	{
+		sub += _str[i];
+	}
+
+	return sub;
 }
