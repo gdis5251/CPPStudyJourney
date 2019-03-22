@@ -1,15 +1,63 @@
-#include <string>
+#ifndef _STRING_H_
+#define _STRING_H_
 
+#include <iostream>
+#include <assert.h>
+
+#pragma warning(disable:4996)
 
 namespace Gerald
 {
 	class String
 	{
 	public:
-		String(const char *str = "");
-		~String();
-		String(const char& str);
-		String& operator= (String s);
+
+		typedef char* iterator;
+		typedef const char* const_iterator;
+
+		iterator begin()
+		{
+			return _str;
+		}
+
+		iterator end()
+		{
+			return _str + _size;
+		}
+
+		String(const char *str = "")
+		{
+			_size = strlen(str);
+			_capacity = _size;
+			_str = new char[_capacity + 1];
+			strcpy(_str, str);
+		}
+
+
+		~String()
+		{
+			if (_str)
+			{
+				delete[] _str;
+			}
+		}
+
+
+		String(const char& str)
+			:_str(nullptr),
+			_size(0),
+			_capacity(0)
+		{
+			String tmp(str);
+			Swap(tmp);
+		}
+
+
+		String& operator=(String s)
+		{
+			Swap(s);
+			return *this;
+		}
 
 		void push_back(char ch);
 		void append(const char *str);
@@ -32,10 +80,32 @@ namespace Gerald
 			return _str;
 		}
 
-		char& operator[](size_t pos);
-		const char& operator[](size_t pos) const;
-		size_t size() const;
-		size_t capacity() const;
+		char& operator[](size_t pos)
+		{
+			assert(pos < _size);
+			return _str[pos];
+		}
+
+
+		const char& operator[](size_t pos) const
+		{
+			assert(pos < _size);
+			return _str[pos];
+		}
+
+
+		size_t size() const
+		{
+			return _size;
+		}
+
+
+		size_t capacity() const
+		{
+			return _capacity;
+		}
+
+
 		void reserve(size_t n);
 		void resize(size_t n, char ch = '\0');
 
@@ -47,5 +117,7 @@ namespace Gerald
 		static const size_t npos;
 	};
 
-	const size_t String::npos = -1;
+	//const size_t String::npos = -1;
 }
+
+#endif //_STRING_H_
