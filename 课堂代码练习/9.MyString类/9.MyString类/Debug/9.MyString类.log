@@ -1,6 +1,4 @@
 ﻿  Main.cpp
   String.cpp
   正在生成代码...
-  LINK : 没有找到 F:\C++\CPPStudyJourney\课堂代码练习\9.MyString类\Debug\9.MyString类.exe 或上一个增量链接没有生成它；正在执行完全链接
-String.obj : error LNK2005: "public: static unsigned int const Gerald::String::npos" (?npos@String@Gerald@@2IB) 已经在 Main.obj 中定义
-F:\C++\CPPStudyJourney\课堂代码练习\9.MyString类\Debug\9.MyString类.exe : fatal error LNK1169: 找到一个或多个多重定义的符号
+  9.MyString类.vcxproj -> F:\C++\CPPStudyJourney\课堂代码练习\9.MyString类\Debug\9.MyString类.exe

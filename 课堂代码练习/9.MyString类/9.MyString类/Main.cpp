@@ -56,11 +56,38 @@ void TestString1()
 	std::cout << s2.c_str() << std::endl;
 	std::cout << s2.size() << std::endl;
 	std::cout << s2.capacity() << std::endl;
+
+	s2.Insert(0, "Gerald");//Geraldello
+	std::cout << s2.c_str() << std::endl;
+	std::cout << s2.size() << std::endl;
+	std::cout << s2.capacity() << std::endl;
+
+	s2.Erase(3, 7);
+	std::cout << s2.c_str() << std::endl;
+	std::cout << s2.size() << std::endl;
+	std::cout << s2.capacity() << std::endl;
+
+
 }
 
 
+
+
+void TestIterator()
+{
+	Gerald::String s("Hello Gerald!");
+
+	std::cout << s << std::endl;
+
+	s.Insert(s.size(), 'G');
+	std::cout << s << std::endl;
+
+	s.Erase(1, 3);
+	std::cout << s << std::endl;
+}
+
 int main(void)
 {
-	TestString1();
+	TestIterator();
 	return 0;
 }

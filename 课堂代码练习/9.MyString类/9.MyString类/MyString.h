@@ -12,7 +12,17 @@ namespace Gerald
 	{
 	public:
 
+		friend std::ostream& operator<<(std::ostream& cout, const String& str);
+
+
 		//iterator//////////////////
+		//作用
+		//1. 实现类似于指针的解引用操作哦
+		//2. 实现类似于指针的位置移动操作 ++ --
+		//3. begin（）返回元素的第一个位置
+		//4. end（）返回最后一个元素下一个位置
+		//5. 迭代器要具有 == !=  的操作逻辑，但是不能比较大小（因为不一定所有数据是按一定物理次序而存的）
+		
 		typedef char* iterator;
 		typedef const char* const_iterator;
 
@@ -25,13 +35,23 @@ namespace Gerald
 		{
 			return _str + _size;
 		}
+
+		const_iterator begin() const
+		{
+			return _str;
+		}
+
+		const_iterator end() const
+		{
+			return _str + _size;
+		}
 		//////////////////////////
 
-		//Member functions
+		//Member functions//////////////////////////
 		String(const char *str = "")
 		{
 			_size = strlen(str);
-			_capacity = _size;
+			_capacity = _size > 15 ? _size : 15;
 			_str = new char[_capacity + 1];
 			strcpy(_str, str);
 		}
@@ -64,19 +84,19 @@ namespace Gerald
 			Swap(s);
 			return *this;
 		}
-		/////////////////
+		/////////////////////////////////////////////
 
-		//Modify
+		//Modify////////////////////////////////////
 		void push_back(char ch);
 		void append(const char *str);
 		String& operator+= (char ch);
 		String& operator+= (const char *str);
 		size_t find(char ch, size_t pos = 0);
 		size_t find(const char *str, size_t pos = 0);
-		void Insert(size_t pos, char ch);
+		void Insert(size_t pos, const char ch);
 		void Insert(size_t pos, const char *str);
-		void Erase(size_t pos, size_t len = -1);
-		String substr(size_t pos, size_t len = -1);
+		void Erase(size_t pos, size_t len = npos);
+		String substr(size_t pos, size_t len = npos);
 		
 		void clear()
 		{
@@ -133,7 +153,7 @@ namespace Gerald
 		void reserve(size_t n);
 		void resize(size_t n, char ch = '\0');
 
-
+		////////////////////////////
 
 	private:
 		char *_str;
@@ -144,7 +164,5 @@ namespace Gerald
 		static const size_t npos;
 
 	};
-	const size_t Gerald::String::npos = -1;
 }
-
 #endif //_STRING_H_
