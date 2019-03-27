@@ -97,6 +97,7 @@ namespace Gerald
 		void Insert(size_t pos, const char *str);
 		void Erase(size_t pos, size_t len = npos);
 		String substr(size_t pos, size_t len = npos);
+
 		
 		void clear()
 		{
@@ -152,6 +153,11 @@ namespace Gerald
 
 		void reserve(size_t n);
 		void resize(size_t n, char ch = '\0');
+
+		Gerald::String operator+(const Gerald::String& s2);
+		String operator+(const char* s2);
+		String operator+(const String& s2);
+
 
 		////////////////////////////
 

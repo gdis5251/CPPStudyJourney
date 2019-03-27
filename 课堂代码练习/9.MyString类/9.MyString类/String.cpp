@@ -97,6 +97,8 @@ size_t Gerald::String::find(char ch, size_t pos)
 
 	return npos;
 }
+
+
 size_t Gerald::String::find(const char *str, size_t pos)
 {
 	assert(pos < _size);
@@ -104,7 +106,7 @@ size_t Gerald::String::find(const char *str, size_t pos)
 	char *pstr = strstr(_str, str);
 	if (pstr)
 	{
-		return pstr - str;
+		return pstr - str;//两个指针相减，返回两个指针之间的元素个数
 	}
 
 	return npos;
@@ -195,3 +197,65 @@ std::ostream& Gerald::operator<<(std::ostream& _cout, const Gerald::String& str)
 
 	return _cout;
 }
+
+
+
+
+char *Strstr(char *haystack, char *needle)
+{
+	assert(haystack);
+	assert(needle);
+
+
+	while (*haystack)
+	{
+
+		if (*haystack == *needle)
+		{
+			char *cur_h = haystack;
+			char *cur_n = needle;
+			while (*cur_h && *cur_n)
+			{
+				if (*cur_n++ != *cur_h++)
+					break;
+			}
+
+			if (*cur_n == '\0')
+				return haystack;
+
+		}
+
+		haystack++;
+	}
+
+	return NULL;
+}
+
+Gerald::String Gerald::String::operator+(const Gerald::String& s2)
+{
+	String tmp(*this);
+	tmp += s2._str;
+
+	return tmp;
+}
+
+
+Gerald::String Gerald::String::operator+(const char* s2)
+{
+	String tmp(*this);
+	tmp += s2;
+
+	return tmp;
+}
+
+
+Gerald::String Gerald::String::operator+(const String& s2)
+{
+	String tmp(*this);
+	tmp += s2._str;
+
+	return tmp;
+
+}
+
+
