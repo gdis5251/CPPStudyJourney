@@ -119,8 +119,10 @@ namespace Gerald
 				T* tmp = new T[n];
 
 				if (_start)
+				{
 					memcpy(tmp, _start, sizeof(T) * sz);
-
+					delete[] _start;	//这里遇到问题，自己解决不了
+				}
 				_start = tmp;
 				_finish = _start + sz;
 				_endofstorage = _start + n;
@@ -130,7 +132,7 @@ namespace Gerald
 
 		void resize(size_t n, const T& val = T())
 		{
-			if (n < size())
+			if (n <= size())
 			{
 				_finish = _start + n;
 				return;
@@ -142,13 +144,15 @@ namespace Gerald
 			}
 
 			iterator it = _finish;
-			iterator finish = _start + n;
 
-			while (it != finish)
+			while (it != _start + n)
 			{
 				*it = val;
 				++it;
 			}
+
+			_finish = _start + n;
+
 		}
 
 
@@ -166,7 +170,7 @@ namespace Gerald
 
 		//因为插入有可能会导致迭代器失效
 		//所以要返回pos
-		iterator insert(iterator pos, const T& x)
+		void insert(iterator pos, const T& x)
 		{
 			assert(pos <= _finish);
 
@@ -188,23 +192,19 @@ namespace Gerald
 
 			*pos = x;
 			_finish++;
-			return pos;
 		}
 
 
 		iterator erase(iterator pos)
 		{
-			size_t new_pos = pos - _start;
-
 			iterator begin = pos;
-			while (begin != _finish)
+			while (begin < _finish - 1)
 			{
 				*begin = *(begin + 1);
 				begin++;
 			}
 
 			_finish--;
-			pos = _start + new_pos;
 
 			return pos;
 		}
@@ -234,7 +234,7 @@ namespace Gerald
 		/////////////////////////////////////////////////////////////
 
 		//swap//////////////////////////////////////////////////////
-		void swap(const T& v)
+		void swap(Vector<T>& v)
 		{
 			std::swap(_start, v._start);
 			std::swap(_finish, v._finish);
