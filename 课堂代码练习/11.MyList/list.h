@@ -30,6 +30,7 @@ struct _ListIterator
         :_node(node)
     {}
 
+
     Ref operator*()
     {
         return _node->_date;
@@ -274,8 +275,23 @@ public:
 
         return false;
     }
-    //end of Modify function 
 
+    void clear()
+    {
+        if (_head)
+        {
+            Node *cur = _head->_next;
+            while (cur != _head)
+            {
+                Node *_next = cur->_next;
+                delete cur;
+                cur = _next;
+            }
+        }
+
+        _head->_next = _head;
+        _head->_prev = _head;
+    }
 
 private:
     Node* _head;

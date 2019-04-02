@@ -96,6 +96,6 @@ void TestList3()
 
 int main(void)
 {
-    TestList2();  
+    TestList1();  
     return 0;
 }
