@@ -30,7 +30,7 @@ struct _ListIterator
         :_node(node)
     {}
 
-    T operator*()
+    T& operator*()
     {
         return _node->_date;
     }
