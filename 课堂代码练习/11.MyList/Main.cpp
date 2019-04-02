@@ -93,8 +93,9 @@ void TestList3()
     std::cout << l1.empty() << std::endl;
 
 }
+
 int main(void)
 {
-    TestList3();  
+    TestList2();  
     return 0;
 }

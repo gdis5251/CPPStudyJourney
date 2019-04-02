@@ -18,12 +18,11 @@ struct ListNode
 
 };
 
-//iterator
+//iterator class 
 template<class T>
 struct _ListIterator
 {
     typedef ListNode<T> Node;
-    typedef _ListIterator<T> self;
     typedef _ListIterator<T> iterator;
     Node *_node;
     
@@ -37,24 +36,40 @@ struct _ListIterator
     }
 
 
-    self& operator++()
+    iterator& operator++()
     {
         _node = _node->_next;
         return *this;
     }
 
-    self& operator--()
+    iterator operator++(int)
+    {
+        iterator oldit(*this);
+
+        _node = _node->_next;
+        return oldit;
+    }
+
+    iterator& operator--()
     {
         _node = _node->_prev;
         return *this;
     }
 
-    bool operator!=(const self& it)
+    iterator operator--(int)
+    {
+        iterator oldit(*this);
+
+        _node = _node->_prev;
+        return oldit;
+    }
+
+    bool operator!=(const iterator& it)
     {
         return _node != it._node;
     }
 
-    self operator-(size_t step)
+    iterator operator-(size_t step)
     {
         iterator cur = *this;
 
@@ -67,7 +82,7 @@ struct _ListIterator
         return cur;
     }
 
-    self operator+(size_t step)
+    iterator operator+(size_t step)
     {
         iterator cur = *this;
         while (step)
@@ -79,7 +94,7 @@ struct _ListIterator
         return cur;
     }
 };
-
+// end of iterator class 
 
 template<class T>
 class List
@@ -110,16 +125,16 @@ public:
     //end of iterator
     //
     //Member function
-    List()
-        :_head(new Node)
+    List(const T& val = T())
+        :_head(new Node(val))
     {
         _head->_next = _head;
         _head->_prev = _head;
     }
 
 
-    List(const List<T>& l)
-        :_head(new Node)
+    List(const List<T>& l, const T& val = T())
+        :_head(new Node(val))
     {
         _head->_next = _head;
         _head->_prev = _head;
