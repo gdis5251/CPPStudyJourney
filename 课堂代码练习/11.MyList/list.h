@@ -19,22 +19,26 @@ struct ListNode
 };
 
 //iterator class 
-template<class T>
+template<class T, class Ref, class Ptr>
 struct _ListIterator
 {
     typedef ListNode<T> Node;
-    typedef _ListIterator<T> iterator;
+    typedef _ListIterator<T, T&, T*> iterator;
     Node *_node;
     
     _ListIterator(Node *node)
         :_node(node)
     {}
 
-    T& operator*()
+    Ref operator*()
     {
         return _node->_date;
     }
-
+    
+    Ptr operator->()
+    {
+        return &_node->_date;
+    }
 
     iterator& operator++()
     {
@@ -102,8 +106,9 @@ class List
     typedef ListNode<T> Node;
 public:
     //iterator 
-    typedef _ListIterator<T> iterator;
-    typedef const _ListIterator<T> const_iterator;
+    typedef _ListIterator<T, T&, T*> iterator;
+    typedef _ListIterator<T, const T&, const T*> const_iterator;
+  
     iterator begin()
     {
         return iterator(_head->_next);
