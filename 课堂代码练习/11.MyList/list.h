@@ -42,7 +42,7 @@ struct _ListIterator
         return *this;
     }
 
-    iterator operator++(int)
+    iterator operator++(int)//The compiler according to int to judgement preposition or postposition
     {
         iterator oldit(*this);
 
@@ -113,6 +113,7 @@ public:
     {
         return iterator(_head);
     }
+
     const iterator begin() const
     {
         return iterator(_head->_next);

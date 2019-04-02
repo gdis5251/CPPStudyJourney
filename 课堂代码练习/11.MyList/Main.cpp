@@ -20,7 +20,7 @@ void TestList1(void)
     while (it != l2.end())
     {
         std::cout << *it << " ";
-        ++it;//why it++ is wrong?
+        ++it;
     }
     std::cout << std::endl;
 
