@@ -20,7 +20,7 @@ void TestList1(void)
     while (it != l2.end())
     {
         std::cout << *it << " ";
-        ++it;//why it++ is wrong?
+        ++it;
     }
     std::cout << std::endl;
 
@@ -93,8 +93,9 @@ void TestList3()
     std::cout << l1.empty() << std::endl;
 
 }
+
 int main(void)
 {
-    TestList3();  
+    TestList1();  
     return 0;
 }

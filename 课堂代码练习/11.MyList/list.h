@@ -18,43 +18,63 @@ struct ListNode
 
 };
 
-//iterator
-template<class T>
+//iterator class 
+template<class T, class Ref, class Ptr>
 struct _ListIterator
 {
     typedef ListNode<T> Node;
-    typedef _ListIterator<T> self;
-    typedef _ListIterator<T> iterator;
+    typedef _ListIterator<T, T&, T*> iterator;
     Node *_node;
     
     _ListIterator(Node *node)
         :_node(node)
     {}
 
-    T operator*()
+
+    Ref operator*()
     {
         return _node->_date;
     }
+    
+    Ptr operator->()
+    {
+        return &_node->_date;
+    }
 
-
-    self& operator++()
+    iterator& operator++()
     {
         _node = _node->_next;
         return *this;
     }
 
-    self& operator--()
+    iterator operator++(int)//The compiler according to int to judgement preposition or postposition
+    {
+        iterator oldit(*this);
+
+        _node = _node->_next;
+        return oldit;
+    }
+
+    iterator& operator--()
     {
         _node = _node->_prev;
         return *this;
     }
 
-    bool operator!=(const self& it)
+    iterator operator--(int)
+    {
+        iterator oldit(*this);
+
+        _node = _node->_prev;
+        return oldit;
+    }
+
+    bool operator!=(const iterator& it)
     {
         return _node != it._node;
     }
 
-    self operator-(size_t step)
+    iterator operator-(size_t step)
     {
         iterator cur = *this;
 
@@ -67,7 +87,7 @@ struct _ListIterator
         return cur;
     }
 
-    self operator+(size_t step)
+    iterator operator+(size_t step)
     {
         iterator cur = *this;
         while (step)
@@ -79,7 +99,7 @@ struct _ListIterator
         return cur;
     }
 };
-
+// end of iterator class 
 
 template<class T>
 class List
@@ -87,8 +107,9 @@ class List
     typedef ListNode<T> Node;
 public:
     //iterator 
-    typedef _ListIterator<T> iterator;
-    typedef const _ListIterator<T> const_iterator;
+    typedef _ListIterator<T, T&, T*> iterator;
+    typedef _ListIterator<T, const T&, const T*> const_iterator;
+  
     iterator begin()
     {
         return iterator(_head->_next);
@@ -98,6 +119,7 @@ public:
     {
         return iterator(_head);
     }
+
     const iterator begin() const
     {
         return iterator(_head->_next);
@@ -110,16 +132,16 @@ public:
     //end of iterator
     //
     //Member function
-    List()
-        :_head(new Node)
+    List(const T& val = T())
+        :_head(new Node(val))
     {
         _head->_next = _head;
         _head->_prev = _head;
     }
 
 
-    List(const List<T>& l)
-        :_head(new Node)
+    List(const List<T>& l, const T& val = T())
+        :_head(new Node(val))
     {
         _head->_next = _head;
         _head->_prev = _head;
@@ -253,8 +275,23 @@ public:
 
         return false;
     }
-    //end of Modify function 
 
+    void clear()
+    {
+        if (_head)
+        {
+            Node *cur = _head->_next;
+            while (cur != _head)
+            {
+                Node *_next = cur->_next;
+                delete cur;
+                cur = _next;
+            }
+        }
+
+        _head->_next = _head;
+        _head->_prev = _head;
+    }
 
 private:
     Node* _head;
