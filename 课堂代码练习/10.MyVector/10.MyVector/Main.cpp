@@ -1,4 +1,5 @@
 #include "Vector.h"
+#include <vector>
 
 void TestMemberFunc()
 {
@@ -33,7 +34,7 @@ void TestVector1()
 
 	// constructors used in the same order as described above:
 	Gerald::Vector<int> first; // empty vector of ints
-	Gerald::Vector<int> second(4u, 100);//这里有点问题，如果不加u，编译器会自动调用第三种（给迭代器用的）构造函数
+	Gerald::Vector<int> second(4, 100);//这里有点问题，如果不加u，编译器会自动调用第三种（给迭代器用的）构造函数
 
 	Gerald::Vector<int> third(second.begin(), second.end()); // iterating through second
 	Gerald::Vector<int> fourth(third); // a copy of third
@@ -52,7 +53,7 @@ void TestVector1()
 	strV.push_back("1111");
 	strV.push_back("2222");
 	strV.push_back("3333");
-	//strV.push_back("4444");
+	strV.push_back("4444");
 	for (size_t i = 0; i < strV.size(); ++i)
 	{
 		cout << strV[i] << " ";
@@ -240,10 +241,64 @@ void TestVector7()
 			++it;
 	}
 }
-	
+
+//test sub nullptr
+void TestVector8()
+{
+	Gerald::Vector<int> a;
+	std::cout << a.size() << std::endl;
+	std::cout << a.capacity() << std::endl;
+}
+
+void TestVector9()
+{
+	Gerald::Vector<int> v1;
+	v1.push_back(1);
+	v1.push_back(2);
+	v1.push_back(3);
+	v1.push_back(4);
+	v1.push_back(5);
+	v1.printfVector();
+
+	Gerald::Vector<string> v2;
+	v2.push_back("I");
+	v2.push_back("will");
+	v2.push_back("get");
+	v2.push_back("BAT");
+	v2.push_back("offer!");
+	v2.printfVector();
+}
+
+void TestVector10()
+{
+	std::vector<int> v1;
+	v1.push_back(1);
+	v1.push_back(2);
+	v1.push_back(3);
+	v1.push_back(4);
+	v1.push_back(5);
+	v1.push_back(6);
+	v1.push_back(8);
+
+	std::vector<int>::iterator it = v1.begin();
+	while (it != v1.end())
+	{
+		if (*it % 2 == 0)
+			it = v1.erase(it);
+		it++;
+	}
+
+	std::vector<int>::iterator pit = v1.begin();
+	while (pit != v1.end())
+	{
+		std::cout << *pit << " ";
+		pit++;
+	}
+	std::cout << std::endl;
+}
 
 int main(void)
 {
-	TestVector7();
+	TestVector1();
 	return 0;
 }

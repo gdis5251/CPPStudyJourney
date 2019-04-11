@@ -5,6 +5,74 @@
 #include <string>
 #include <assert.h>
 
+
+
+//type  traits////////////////////////////////////////////////////
+// 代表内置类型
+struct __true_type {};
+// 代表自定义类型
+struct __false_type {};
+template <class type>
+struct __type_traits
+{
+	typedef __false_type is_POD_type;
+};
+// 对所有内置类型进行特化
+template<>
+struct __type_traits<char>
+{
+	typedef __true_type is_POD_type;
+};
+template<>
+struct __type_traits<signed char>
+{
+	typedef __true_type is_POD_type;
+};
+template<>
+struct __type_traits<unsigned char>
+{
+	typedef __true_type is_POD_type;
+};
+template<>
+struct __type_traits<int>
+{
+	typedef __true_type is_POD_type;
+};
+template<>
+struct __type_traits<float>
+{
+	typedef __true_type is_POD_type;
+};
+template<>
+struct __type_traits<double>
+{
+	typedef __true_type is_POD_type;
+};
+// 注意：在重载内置类型时，所有的内置类型都必须重载出来，包括有符号和无符号，比如：对于int类型，必
+//须特化三个，int-- signed int -- unsigned int
+// 在需要区分内置类型与自定义类型的位置，标准库通常都是通过__true_type与__false_type给出一对重载
+//的
+// 函数，然后用一个通用函数对其进行封装
+// 注意：第三个参数可以不提供名字，该参数最主要的作用就是让两个_copy函数形成重载
+template<class T>
+void _copy(T* dst, T* src, size_t n, __true_type)
+{
+	memcpy(dst, src, n * sizeof(T));
+}
+template<class T>
+void _copy(T* dst, T* src, size_t n, __false_type)
+{
+	for (size_t i = 0; i < n; ++i)
+		dst[i] = src[i];
+}
+template<class T>
+void Copy(T* dst, T* src, size_t n)
+{
+	_copy(dst, src, n, __type_traits<T>::is_POD_type());
+}
+//end of type traits//////////////////////////////////////////////////
+
+
 namespace Gerald
 {
 	template<class T>
@@ -21,7 +89,7 @@ namespace Gerald
 		//构造的时候放进去n个val
 		//这里存在一个问题
 		//如果在调用这个函数的时候，传两个int类型的，会自动调用下面的构造函数，发生解引用错误
-		explicit Vector(size_t n, const T& val = T())
+		explicit Vector(int n, const T& val = T())
 			:_start(nullptr)
 			, _finish(nullptr)
 			, _endofstorage(nullptr)
@@ -34,6 +102,7 @@ namespace Gerald
 			}
 
 		}
+
 
 		template<class InputIterator>
 		Vector(InputIterator first, InputIterator last)
@@ -66,19 +135,23 @@ namespace Gerald
 		{
 			reserve(v.capacity());
 
-			iterator it = begin();
-			const_iterator vit = v.begin();
 
-			while (vit != v.end())
-			{
-				*it++ = *vit++;
-			}
+			Copy(_start, v._start, v.size());
+			//iterator it = begin();
+			//const_iterator vit = v.begin();
+
+			//
+			////深拷贝
+			//while (vit != v.end())
+			//{
+			//	*it++ = *vit++;
+			//}
 
 			_finish = _start + v.size();
 		}
 
 
-		Vector<T> operator=(const Vector<T> v)
+		Vector<T>& operator=(const Vector<T> v)
 		{
 			swap(v);
 			return *this;
@@ -120,8 +193,27 @@ namespace Gerald
 
 				if (_start)
 				{
-					memcpy(tmp, _start, sizeof(T) * sz);
-					delete[] _start;	//这里遇到问题，自己解决不了
+					//memcpy(tmp, _start, sizeof(T) * sz);//浅拷贝
+					//深拷贝 调用T类型的赋值运算符重载
+					
+					/*for (int i = 0; i < size(); i++)
+						tmp[i] = _start[i];*/
+					//这里拷贝可以用类型萃取来选择到底使用哪种拷贝方式 
+					
+					//类型萃取
+					//然后在决定是深拷贝还是浅拷贝
+					Copy(tmp, _start, size());
+				
+					delete[] _start;	
+					/*
+						对于string对象
+						memcpy是按字节拷贝
+						拷贝了string对象的指针
+						等于说第一次释放的时候已经将当前string已有的内容释放了
+						第三次插入，再次释放空间的时候
+						会存在二次释放
+						所以会报错
+					*/
 				}
 				_start = tmp;
 				_finish = _start + sz;
@@ -143,16 +235,12 @@ namespace Gerald
 				reserve(n);
 			}
 
-			iterator it = _finish;
-
-			while (it != _start + n)
+		
+			while (_finish != _start + n)
 			{
-				*it = val;
-				++it;
+				*_finish = val;
+				++_finish;
 			}
-
-			_finish = _start + n;
-
 		}
 
 
@@ -195,6 +283,8 @@ namespace Gerald
 		}
 
 
+		//erase导致迭代器失效
+		//获取erase的返回值，更新迭代器
 		iterator erase(iterator pos)
 		{
 			iterator begin = pos;
@@ -242,6 +332,21 @@ namespace Gerald
 		}
 
 		//////////////////////////////////////////////////////////////
+
+		//print///////////////////////////////////////////////////
+		void printfVector()
+		{
+			Vector<T>::const_iterator it = begin();
+			while (it != end())
+			{
+				std::cout << *it << " ";
+				it++;
+			}
+			std::cout << std::endl;
+		}
+		///////////////////////////////////////////////////////////
+
+
 	private:
 		/*T* _start;
 		T* _finish;
