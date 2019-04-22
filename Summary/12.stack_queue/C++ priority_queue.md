@@ -27,7 +27,7 @@
 
 priority_queue是一个容器，那么它就应该有各种接口供我们调用。
 
-![微信截图_20190410140501](F:\C++\CPPStudyJourney\知识点总结\12.stack_queue\微信截图_20190410140501.png)
+![微信截图_20190410140501](F:\CPPStudyJourney\Summary\12.stack_queue\微信截图_20190410140501.png)
 
 ```cpp
 #include <iostream>
