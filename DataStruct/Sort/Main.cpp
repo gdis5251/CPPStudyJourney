@@ -2,6 +2,7 @@
 #include "PrintArr.h"
 #include "ShellSort.h"
 #include "SelectSort.h"
+#include "HeapSort.h"
 
 int main(void)
 {
@@ -11,7 +12,8 @@ int main(void)
     //InsertingSortDown(arr);
     //ShellSort(arr);    
     //SelectSort(arr);
-    SelectSortOP(arr);
+    //SelectSortOP(arr);
+    HeapSort(arr);
     PrintArray(arr);
 
     return 0;
