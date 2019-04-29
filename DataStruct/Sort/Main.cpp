@@ -3,6 +3,7 @@
 #include "ShellSort.h"
 #include "SelectSort.h"
 #include "HeapSort.h"
+#include "BubbleSort.h"
 
 int main(void)
 {
@@ -13,7 +14,8 @@ int main(void)
     //ShellSort(arr);    
     //SelectSort(arr);
     //SelectSortOP(arr);
-    HeapSort(arr);
+    //HeapSort(arr);
+    BubbleSort(arr);
     PrintArray(arr);
 
     return 0;
