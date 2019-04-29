@@ -4,6 +4,7 @@
 #include "SelectSort.h"
 #include "HeapSort.h"
 #include "BubbleSort.h"
+#include "QuickSort.h"
 
 int main(void)
 {
@@ -15,7 +16,8 @@ int main(void)
     //SelectSort(arr);
     //SelectSortOP(arr);
     //HeapSort(arr);
-    BubbleSort(arr);
+    //BubbleSort(arr);
+    QuickSort(arr);
     PrintArray(arr);
 
     return 0;
