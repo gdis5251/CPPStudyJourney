@@ -4,10 +4,10 @@
 
 void Merge(std::vector<int>& arr, int left, int mid, int right)
 {
-    int *tmp = new int[(int)arr.size()];
+    int *tmp = new int[right - left + 1];
     int p1 = left;
     int p2 = mid + 1;
-    int k = left;
+    int k = 0;
 
     while (p1 <= mid && p2 <= right)
     {
@@ -22,13 +22,12 @@ void Merge(std::vector<int>& arr, int left, int mid, int right)
     while (p2 <= right)
         tmp[k++] = arr[p2++];
 
-    for (int i = left; i <= right; i++)
+    for (int i = left, k = 0; i <= right; i++, k++)
     {
-        arr[i] = tmp[i];
+        arr[i] = tmp[k];
     }
 
     delete[] tmp;
-    tmp = nullptr;
 }
 
 void _MergeSort(std::vector<int>& arr, int left, int right)

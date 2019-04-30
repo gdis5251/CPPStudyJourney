@@ -9,7 +9,7 @@
 
 int main(void)
 {
-    std::vector<int> arr = {4, 5, 1, 9, 7, 5, 2, 8};
+    std::vector<int> arr = {4, 0, 5, 1, 9, 7, 5, 2, 8};
     //InsertingSort(arr);
     //PrintArray(arr);
     //InsertingSortDown(arr);
