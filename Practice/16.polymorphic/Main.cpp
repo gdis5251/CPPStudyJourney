@@ -2,11 +2,6 @@
 
 int main(void)
 {
-    Person* p = new Person;
-    Person* c = (Person*)new Child;
-
-    delete p;
-    delete c;
-    
+    Test();
     return 0;
 }
