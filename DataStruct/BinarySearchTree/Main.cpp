@@ -13,19 +13,8 @@ int main(void)
 	bt.Insert(1);
 	bt.Inorder();
 
-	bt.Erase(2);
+    bt.Erase(4);
 	bt.Inorder();
-	bt.Erase(3);
-	bt.Inorder();
-	bt.Erase(9);
-	bt.Inorder();
-	bt.Erase(4);
-	bt.Inorder();
-	bt.Erase(1);
-	bt.Inorder();
-	bt.Erase(7);
-	bt.Inorder();
-	bt.Erase(6);
-	bt.Inorder();
+
 	return 0;
 }

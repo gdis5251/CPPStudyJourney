@@ -201,6 +201,10 @@ public:
 		// 这里采用在左子树里找一个最大结点
 		else
 		{
+            pNode exchange = cur;
+            if (cur == _root)
+                cur = cur->_left;
+
 			pNode newNode = cur;
 			pNode nParent = nullptr;
 			while (newNode)
@@ -215,7 +219,7 @@ public:
 			}
 
 			// 置换左子树的最大结点和cur，其实就是换一下值
-			cur->_val = newNode->_val;
+			exchange->_val = newNode->_val;
 			// 删除newNode
 			// 因为newNode只往右走，所以直接改nParent的右子树就行
 			nParent->_right = nullptr;
