@@ -143,6 +143,8 @@ public:
 				_root = nullptr;
 			}
 
+			delete cur;
+			cur = nullptr;
 
 		}
 		// 如果该结点只有右子树
