@@ -1,4 +1,4 @@
-#include "AVITree.hpp"
+#include "AVLTree.hpp"
 
 void TestAVLTree()
 {
