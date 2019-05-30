@@ -223,6 +223,7 @@ public:
 
 			}
 			// 置换左子树的最大结点和cur，其实就是换一下值
+
 			exchange->_val = newNode->_val;
 			// 删除newNode
 			// 因为newNode只往右走，所以直接改nParent的右子树就行
@@ -234,6 +235,7 @@ public:
 
 		return true;
 	}
+
 
 	void Inorder(void)
 	{
