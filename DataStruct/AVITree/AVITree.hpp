@@ -72,84 +72,168 @@ public:
 		newNode->_pParent = parent;
 		cur = newNode;
 
-		// 更新平衡因子，判断是否需要旋转
-		while (parent)
-		{
-			if (parent->_pLeft == cur)
-				--parent->_bf;
-			else
-				++parent->_bf;
-
-			// 如果此时父结点的平衡因子为0，说明达到最佳平衡，不需要旋转了
-			if (parent->_bf == 0)
-				break;
-
-			// 如果父结点的平衡因子为 1 或 -1，还需要更新此路径上的平衡因子
-			if (parent->_bf == 1 || parent->_bf == -1)
-			{
-				cur = parent;
-				parent = parent->_pParent;
-			}
-			// 如果父结点的平衡因子为 2 或 -2，说明此时需要旋转，并且旋转完，AVI树到达平衡
-			else if (parent->_bf == 2 || parent->_bf == -2)
-			{
-				if (parent->_bf == 2 && cur->_bf == 1)// 左旋
-				{
-					RotateL(parent);
-				}
-				else if (parent->_bf == -2 && cur->_bf == -1)
-				{
-					RotateR(parent);
-				}
-				else if (parent->_bf == -2 && cur->_bf == 1)
-				{
-					pNode subL = parent->_pLeft;
-					pNode subLR = subL->_pRight;
-					int bf = subLR->_bf;
-					
-					RotateL(cur);
-					RotateR(parent);
-
-					if (bf == -1)
-					{
-						parent->_bf = 1;
-						subL->_bf = 0;
-					}
-					else if (bf == 1)
-					{
-						parent->_bf = 0;
-						subL->_bf = -1;
-					}
-				}
-				else if (parent->_bf == 2 && cur->_bf == -1)
-				{
-					pNode subR = parent->_pRight;
-					pNode subRL = subR->_pLeft;
-					int bf = subRL->_bf;
-
-					RotateR(cur);
-					RotateL(parent);
-
-					if (bf == -1)
-					{
-						parent->_bf = 0;
-						subR->_bf = 1;
-					}
-					else if (bf == 1)
-					{
-						parent->_bf = -1;
-						subR->_bf = 0;
-					}
-				}
-
-				// 旋转完一定达到平衡，所以可以直接退出循环
-				break;
-			}
-		}
+		Adjust(parent, cur);
 
 		return true;
 	}
 
+	// 删除结点
+	bool Erase(const T& val)
+	{
+		if (nullptr == _root)
+		{
+			return false;
+		}
+
+		// 先找到值对应的结点
+		pNode parent = nullptr;
+		pNode cur = _root;
+		while (cur)
+		{
+			if (val == cur->_val)
+				break;
+			
+			parent = cur;
+			if (val < cur->_val)
+				cur = cur->_pLeft;
+			else
+				cur = cur->_pRight;
+		}
+		// 如果没找到就返回 false
+		if (nullptr == cur)
+			return false;
+
+		// 分情况开始删除结点
+		// 如果该结点是叶子结点
+		if (nullptr == cur->_pLeft && nullptr == cur->_pRight)
+		{
+			if (cur == _root)
+			{
+				delete cur;
+				cur = nullptr;
+				_root = nullptr;
+			}
+			else
+			{
+				if (parent->_pLeft == cur)
+					parent->_pLeft = nullptr;
+				else
+					parent->_pRight = nullptr;
+
+				delete cur;
+				cur = nullptr;
+
+				Adjust(parent, cur);
+			}
+		}
+		// 如果cur只有左子树
+		else if (nullptr == cur->_pRight)
+		{
+			if (cur == _root)
+			{
+				_root = _root->_pLeft;
+			}
+			else
+			{
+				if (parent->_pLeft == cur)
+					parent->_pLeft = cur->_pLeft;
+				else
+					parent->_pRight = cur->_pLeft;
+				
+				pNode child = cur->_pLeft;
+			
+				Adjust(parent, child);
+			}
+			delete cur;
+			cur = nullptr;
+		}
+		// 如果只有右子树
+		else if (nullptr == cur->_pLeft)
+		{
+			if (cur == _root)
+			{
+				_root = _root->_pLeft;
+			}
+			else
+			{
+				if (parent->_pLeft == cur)
+					parent->_pLeft = cur->_pRight;
+				else
+					parent->_pRight = cur->_pRight;
+
+				pNode child = cur->_pRight;
+				
+				Adjust(parent, child);
+			}
+			delete cur;
+			cur = nullptr;
+		}
+		// 如果两个子树都有
+		// 在左子树里选一个最大的或者在右子树里选一个最小的
+		// 这里采用在右子树里选一个最小的
+		else
+		{
+			// 找到右子树里最小的结点
+			pNode exchange = cur;
+			if (cur == _root)
+				cur = cur->_pRight;
+
+			pNode newNode = cur;
+			parent = nullptr;
+			while (newNode)
+			{
+				if (newNode->_pLeft)
+				{
+					parent = newNode;
+					newNode = newNode->_pLeft;
+				}
+				else
+					break;
+			}
+			
+			if (parent)
+			{
+				parent->_pLeft = nullptr;
+			}
+			// 如果 parent 为空，说明newNode没有动，并且newNode没有左子树
+			else
+			{
+				exchange->_pRight = newNode->_pRight;
+				parent = exchange;
+			}
+			exchange->_val = newNode->_val;
+
+			
+			delete newNode;
+			newNode = nullptr;
+
+			
+			Adjust(parent, newNode);
+		};
+		
+	}
+	
+
+	// 中序遍历，是一个有序的
+	void InorderTraversal()
+	{
+		_InorderTraversal(_root);
+		std::cout << std::endl;
+	}
+
+	int GetHeight()
+	{
+		return _GetHeight(_root);
+	}
+
+	
+
+	bool JudgeIfBalance()
+	{
+		return _JudgeIfBalance(_root);
+	}
+
+private:
 	void RotateL(pNode& parent)
 	{
 		// 先记录所有需要修改属性的结点
@@ -190,7 +274,7 @@ public:
 		parent->_bf = subR->_bf = 0;
 	}
 
-	void RotateR(pNode& parent)
+	void RotateR(pNode & parent)
 	{
 		// 先记录需要旋转的结点
 		pNode subL = parent->_pLeft;
@@ -228,26 +312,96 @@ public:
 		parent->_bf = subL->_bf = 0;
 	}
 
-	// 中序遍历，是一个有序的
-	void InorderTraversal()
+	void Adjust(pNode& parent, pNode& cur)
 	{
-		_InorderTraversal(_root);
-		std::cout << std::endl;
+		// 更新平衡因子，判断是否需要旋转
+		while (parent)
+		{
+			parent->_bf = _GetHeight(parent->_pRight) - _GetHeight(parent->_pLeft);
+
+			if (parent == _root && abs(parent->_bf) < 2)
+				break;
+			// 如果父结点的平衡因子为 1 或 -1，还需要更新此路径上的平衡因子
+			if (parent->_bf == 1 || parent->_bf == -1 || parent->_bf == 0)
+			{
+				cur = parent;
+				parent = parent->_pParent;
+			}
+			// 如果父结点的平衡因子为 2 或 -2，说明此时需要旋转，并且旋转完，AVI树到达平衡
+			else if (parent->_bf == 2 || parent->_bf == -2)
+			{
+				if (parent->_bf == 2 && cur == nullptr)
+				{
+					pNode subR = parent->_pRight;
+					RotateL(parent);
+
+					subR->_bf = _GetHeight(subR->_pRight) - _GetHeight(subR->_pLeft);
+					parent->_bf = _GetHeight(parent->_pRight) - _GetHeight(parent->_pLeft);
+				}
+				else if (parent->_bf == -2 && cur == nullptr)
+				{
+					pNode subL = parent->_pLeft;
+					RotateR(parent);
+
+					subL->_bf = _GetHeight(subL->_pRight) - _GetHeight(subL->_pLeft);
+					parent->_bf = _GetHeight(parent->_pRight) - _GetHeight(parent->_pLeft);
+				}
+				else if (parent->_bf == 2 && cur->_bf == 1)// 左旋
+				{
+					RotateL(parent);
+				}
+				else if (parent->_bf == -2 && cur->_bf == -1)
+				{
+					RotateR(parent);
+				}
+				else if (parent->_bf == -2 && cur->_bf == 1)
+				{
+					pNode subL = parent->_pLeft;
+					pNode subLR = subL->_pRight;
+					int bf = subLR->_bf;
+
+					RotateL(cur);
+					RotateR(parent);
+
+					if (bf == -1)
+					{
+						parent->_bf = 1;
+						subL->_bf = 0;
+					}
+					else if (bf == 1)
+					{
+						parent->_bf = 0;
+						subL->_bf = -1;
+					}
+				}
+				else if (parent->_bf == 2 && cur->_bf == -1)
+				{
+					pNode subR = parent->_pRight;
+					pNode subRL = subR->_pLeft;
+					int bf = subRL->_bf;
+
+					RotateR(cur);
+					RotateL(parent);
+
+					if (bf == -1)
+					{
+						parent->_bf = 0;
+						subR->_bf = 1;
+					}
+					else if (bf == 1)
+					{
+						parent->_bf = -1;
+						subR->_bf = 0;
+					}
+				}
+
+				// 旋转完一定达到平衡，所以可以直接退出循环
+				break;
+			}
+
+
+		}
 	}
-
-	int GetHeight()
-	{
-		return _GetHeight(_root);
-	}
-
-	
-
-	bool JudgeIfBalance()
-	{
-		return _JudgeIfBalance(_root);
-	}
-
-private:
 
 	int _GetHeight(const pNode& _root)
 	{
@@ -294,20 +448,3 @@ private:
 	pNode _root = nullptr;
 };
 
-void TestAVLTree()
-{
-	AVLTree<int> t;
-	t.Insert(16);
-	t.Insert(3);
-	t.Insert(7);
-	t.Insert(11);
-	t.Insert(9);
-	t.Insert(26);
-	t.Insert(18);
-	t.Insert(14);
-	t.Insert(15);
-
-	t.InorderTraversal();
-
-	std::cout << t.JudgeIfBalance() << std::endl;
-}
