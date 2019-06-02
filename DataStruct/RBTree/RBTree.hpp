@@ -35,7 +35,7 @@ public:
         _header->_pRight = _header;
     }
 
-    bool Insert (pair<K, V>& kv)
+    bool Insert (const std::pair<K, V>& kv)
     {
         if (_header->_pParent == nullptr)
         {
@@ -116,29 +116,86 @@ public:
                         // 做单旋
                         RotateL(parent);
                         std::swap(cur, parent); // 这里交换两个指针是为了后面统一改变颜色
-                        RotateR(gParent);
                     }
-                    else
-                    {
-                        RotateR(gParent);
-                    }
-
-
+                    RotateR(gParent);
 
                     gParent->_color = RED;
                     parent->_color = BLACK;
+
+                    break;
                 }
             }
             else
-                uncle = gParent->_pLeft;
+            {
+                uncle = gParent->_pLeft; 
+                if (uncle && uncle->_color == RED)
+                {
+                    uncle->_color = BLACK;
+                    parent->_color = BLACK;
+                    gParent->_color = RED;
 
+                    cur = gParent;
+                }
+                else 
+                {
+                    // 判断插入位置，根据插入位置再做处理
+                    if (parent->_pLeft == cur)
+                    {
+                        RotateR(parent);
+                        std::swap(parent, cur);
+                    }
+                    RotateL(gParent);
 
+                    parent->_color = BLACK;
+                    gParent->_color = RED;
 
+                    break;
+                }
+            }
+            // 红黑树根始终是黑色的
+            _header->_pParent->_color = BLACK;
 
+            // 为了以后实现迭代器
+            _header->_pLeft = LeftMost();
+            _header->_pRight = RightMost();
         }
     }
 
+    void Inorder()
+    {
+        _Inorder(_header->_pParent);
+        std::cout << std::endl;
+    }
+
 private:
+    void _Inorder(pNode& root)
+    {
+        _Inorder(root->_pLeft);
+        std::cout << root->_kv.second << " ";
+        _Inorder(root->_pRight);
+    }
+    pNode LeftMost()
+    {
+        pNode cur = _header->_pParent;
+        while (cur && cur->_pLeft)
+        {
+            cur = cur->_pLeft;
+        }
+
+        return cur;
+    }
+
+    pNode RightMost()
+    {
+        pNode cur = _header->_pParent;
+        while (cur && cur->_pRight)
+        {
+            cur = cur->_pRight;
+        }
+
+        return cur;
+    }
+
     void RotateR(pNode& parent)
     {
         pNode subL = parent->_pLeft;
@@ -148,20 +205,60 @@ private:
         subL->_pRight = parent;
         parent->_pLeft = subLR;
 
-        subLR->_pParent = parent;
+        if (subLR)
+            subLR->_pParent = parent;
 
-        pNode gParent = parent->_pParent;
-        if (gParent->_pLeft == parent)
+        if (parent == _header->_pParent)
         {
-            gParent->_pLeft = subL;
+            subL->_pParent == _header;
+            parent->_pParent = subL;
         }
         else
         {
-            gParent->_pRight = subL;
+            pNode gParent = parent->_pParent;
+            subL->_pParent = gParent;
+            if (gParent->_pLeft == parent)
+            {
+                gParent->_pLeft = subL;
+            }
+            else
+            {
+                gParent->_pRight = subL;
+            }
+
         }
 
-        subL->_pParent = gParent;
         parent->_pParent = subL;
+    }
+
+    void RotateL(pNode& parent)
+    {
+        pNode subR = parent->_pRight;
+        pNode subRL = subR->_pLeft;
+
+        subR->_pLeft = parent;
+        parent->_pRight = subRL;
+
+        if (subRL)
+            subRL->_pParent = parent;
+        
+        if (parent == _header->_pParent)
+        {
+            subR->_pParent = _header;
+            parent->_pParent = subR;
+        }
+        else
+        {
+            pNode gParent = parent->_pParent;
+            if (gParent->_pLeft == parent)
+                gParent->_pLeft = subR;
+            else
+                gParent->_pRight = subR;
+            
+            subR->_pParent = gParent;
+
+        }
+        parent->_pParent = subR;
     }
 
 
