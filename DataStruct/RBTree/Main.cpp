@@ -22,8 +22,7 @@ void TestRBTree()
 	}
 
     rb.Inorder();
-	if (rb.IsValidRBTree())
-		std::cout << "ÊÇÒ»¿ÅºìºÚÊ÷ £¡" << std::endl;
+    std::cout << rb.IsValidRBTree() << std::endl;
 }
 
 int main(void)
