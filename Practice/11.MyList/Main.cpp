@@ -94,8 +94,24 @@ void TestList3()
 
 }
 
+void TestList4()
+{
+    Gerald::List<int> ll;
+    ll.push_back(1);
+    ll.push_back(2);
+    ll.push_back(3);
+    ll.push_back(4);
+    ll.push_back(5);
+
+    auto lit = ll.begin();
+    while (lit != ll.end())
+    {
+        std::cout << *lit << std::endl;
+    }
+}
+
 int main(void)
 {
-    TestList1();  
+    TestList4();  
     return 0;
 }
