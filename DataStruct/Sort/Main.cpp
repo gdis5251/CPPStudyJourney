@@ -1,11 +1,5 @@
-#include "InsertingSort.h"
-#include "MergeSort.h"
+#include "AllSort.hpp"
 #include "PrintArr.h"
-#include "ShellSort.h"
-#include "SelectSort.h"
-#include "HeapSort.h"
-#include "BubbleSort.h"
-#include "QuickSort.h"
 
 int main(void)
 {
@@ -19,8 +13,23 @@ int main(void)
     //HeapSort(arr);
     //BubbleSort(arr);
     //QuickSort(arr);
-    MergeSort(arr);
-    PrintArray(arr);
+    //MergeSort(arr);
+    
+    // InsertSort(arr);
+    // PrintArray(arr);
 
+    // ShellSort(arr);
+    // PrintArray(arr);
+
+    // SelectSort(arr);
+    // PrintArray(arr);
+
+    // HeapSort(arr);
+    // PrintArray(arr);
+
+    // BubbleSort(arr);
+    
+    QuickSort(arr);
+    PrintArray(arr);
     return 0;
 }
