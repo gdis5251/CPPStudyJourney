@@ -364,3 +364,93 @@ void QuickSort(std::vector<int>& arr)
     _QuickSort(arr, 0, (int)arr.size() - 1);
 }
 
+
+
+// 归并排序
+// 对一个大数组进行排序的问题
+// 变成了对左右两个小数组进行排序的问题o
+//
+// 时间复杂度
+// 最好|平均|最坏：O(N * LogN)
+//
+// 空间复杂度
+// O(N)
+//
+// 稳定性：稳定
+//
+// 优点：可以对硬盘上的数据进行排序
+
+// 合并两个有序数组
+// arr[left, mid)
+// arr[mid, right)
+// 该操作的
+// 时间复杂度 
+// O(N)
+//
+// 空间复杂度
+// O(N)
+void Merge(std::vector<int>& arr, int left, int mid, int right, std::vector<int>& tmp)
+{
+
+    int left_index = left;
+    int right_index = mid;
+    int index = 0;
+
+    while (left_index < mid && right_index < right)
+    {
+        if (arr[left_index] <= arr[right_index]) // <= 之所以加 = 是为了保证稳定性
+        {
+            tmp[index++] = arr[left_index++];
+        }
+        else
+        {
+            tmp[index++] = arr[right_index++];
+        }
+    }
+
+    while (left_index < mid)
+    {
+        tmp[index++] = arr[left_index++];
+    }
+
+    while (right_index < right)
+    {
+        tmp[index++] = arr[right_index++];
+    }
+    
+    for (int i = 0; i < right - left; i++)
+    {
+        arr[left + i] = tmp[i];
+    }
+}
+
+void _MergeSort(std::vector<int>& arr, int left, int right, std::vector<int>& tmp)
+{
+    if (right == left + 1)// 区间内还剩一个数
+    {
+        return;
+    }
+    if (left >= right)// 区间内没有数了
+    {
+        return;
+    }
+
+    int mid = left + (right - left) / 2;
+    //  区间被分成左右两个小区间
+    //  [left, mid)
+    //  [mid, right)
+    //  先把左右两个小区间进行排序，分治算法，递归解决
+    
+    _MergeSort(arr, 0, mid, tmp);
+    _MergeSort(arr, mid, right, tmp);
+
+    // 左右两个小区间已经有序
+    // 合并两个有序数组
+    Merge(arr, left, mid, right, tmp);
+}
+
+void MergeSort(std::vector<int>& arr)
+{
+    std::vector<int> tmp(arr.size());
+    _MergeSort(arr, 0, arr.size(), tmp);
+}

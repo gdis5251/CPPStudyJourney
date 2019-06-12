@@ -29,7 +29,8 @@ int main(void)
 
     // BubbleSort(arr);
     
-    QuickSort(arr);
+    // QuickSort(arr);
+    MergeSort(arr);
     PrintArray(arr);
     return 0;
 }
