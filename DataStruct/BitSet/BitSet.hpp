@@ -13,8 +13,12 @@ public:
     // 置1
     void set(int num)
     {
-        int index = num >> 5;
-        int pos = index % 32;
+        if (num > bit_.size())
+        {
+            return;
+        }
+        int index = num >> 5; // 找到 num 在数组中的位置
+        int pos = num % 32; // 定位比特位
 
         bit_[index] |= (1 << pos);
     }
@@ -23,7 +27,7 @@ public:
     void reset(int num)
     {
         int index = num >> 5;
-        int pos = index % 32;
+        int pos = num % 32;
 
         bit_[index] &= ~(1 << pos);
     }
@@ -31,7 +35,7 @@ public:
     bool test(int num)
     {
         int index = num >> 5;
-        int pos = index % 32;
+        int pos = num % 32;
 
         return bit_[index] & (1 << pos);
     }
