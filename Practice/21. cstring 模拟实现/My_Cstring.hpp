@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <assert.h>
 
 int My_Strlen1(const char* str)
@@ -102,4 +103,49 @@ char* My_strstr(const char* str1, const char* str2)
     }
 
     return NULL;
+}
+
+void* My_memcpy(void* dest, const void* src, size_t count)
+{
+    assert(dest != NULL && src != NULL);
+
+    char* my_dest = static_cast<char*>(dest);
+    const char* my_src = static_cast<const char*>(src);
+
+    while (count--)
+    {
+        *my_dest++ = *my_src++;
+    }
+
+    return dest;
+}
+
+void* My_memmove(void* dest, const void* src, size_t count)
+{
+    assert(dest != NULL && src != NULL);
+
+    char* my_dest = static_cast<char*>(dest);
+    const char* my_src = static_cast<const char*>(src);
+
+    // 考虑覆盖的情况
+    if (my_src < my_dest && (my_src + count) >= my_dest)
+    {
+        // 会产生覆盖的情况，从后往前赋值
+        my_dest = my_dest + count - 1;
+        my_src = my_src + count - 1;
+
+        while (count--)
+        {
+            *my_dest-- = *my_src--;
+        }
+    }
+    else
+    {
+        while (count--)
+        {
+            *my_dest-- = *my_src--;
+        }
+    }
+
+    return dest;
 }

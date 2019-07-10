@@ -40,11 +40,35 @@ void Test_strstr(void)
     printf("%s\n", My_strstr(str1, str3));
 }
 
+void Test_memcpy(void)
+{
+    char src1[] = {"abcdef"};
+    char src2[] = {"abcdef"};
+    char src3[] = {"abcdef"};
+
+
+    std::cout << (char*)My_memcpy(src1 + 1, src1, 1) << std::endl; // acdef
+    std::cout << (char*)My_memcpy(src2 + 1, src2, 2) << std::endl; // abdef
+    std::cout << (char*)My_memcpy(src3 + 1, src3, 3) << std::endl; // abcef
+}
+
+void Test_memmove()
+{
+    char src1[] = {"abcdef"};
+    char src2[] = {"abcdef"};
+    char src3[] = {"abcdef"};
+
+    std::cout << (char*)My_memmove(src1 + 1, src1, 1) << std::endl; // acdef
+    std::cout << (char*)My_memmove(src2 + 1, src2, 2) << std::endl; // abdef
+    std::cout << (char*)My_memmove(src3 + 1, src3, 3) << std::endl; // abcef
+}
+
 int main(void)
 {
-    //Test_strcpy();
-    Test_strcat();
-    //Test_strstr();
-
+    // Test_strcpy();
+    // Test_strcat();
+    // Test_strstr();
+    // Test_memcpy();
+    Test_memmove();
     return 0;
 }
