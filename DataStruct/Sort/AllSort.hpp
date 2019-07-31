@@ -389,6 +389,7 @@ void QuickSort(std::vector<int>& arr)
 //
 // 空间复杂度
 // O(N)
+#if 0
 void Merge(std::vector<int>& arr, int left, int mid, int right, std::vector<int>& tmp)
 {
 
@@ -452,5 +453,71 @@ void _MergeSort(std::vector<int>& arr, int left, int right, std::vector<int>& tm
 void MergeSort(std::vector<int>& arr)
 {
     std::vector<int> tmp(arr.size());
+    _MergeSort(arr, 0, arr.size(), tmp);
+}
+#endif 
+
+void _Merge(std::vector<int>& arr, int left, int mid, int right, std::vector<int>& tmp)
+{
+    // 设置左右数组的开始下标
+    int left_index = left;
+    int right_index = mid;
+    int index = 0;
+
+    while (left_index < mid && right_index < right)
+    {
+        if (arr[left_index] < arr[right_index])
+        {
+            tmp[index++] = arr[left_index++];
+        }
+        else
+        {
+            tmp[index++] = arr[right_index++];
+        }
+    }
+
+    // 将剩余没有进行排序的数字全部入数组
+    while (left_index < mid)
+    {
+        tmp[index++] = arr[left_index++];
+    }
+    while (right_index < right)
+    {
+        tmp[index++] = arr[right_index++];
+    }
+
+    // 将 tmp 数组排好序的部分给 arr 重新赋值
+    for (int i = 0; i < right - left; i++)
+    {
+        arr[i + left] = tmp[i];
+    }
+}
+
+void _MergeSort(std::vector<int>& arr, int left, int right, std::vector<int>& tmp)
+{
+    // 判断跳出条件
+    // 只剩下一个数跳出或者区间内没有数了，跳出
+    if (left + 1 == right || left >= right)
+    {
+        return;
+    }
+
+    // 算出中间数下标，若为偶数个数字，中间数为中间两个数的偏右的数字
+    // 这个算的原因是防止溢出
+    int mid = left + (right - left) / 2;
+
+    _MergeSort(arr, left, mid, tmp);
+    _MergeSort(arr, mid, right, tmp);
+
+    _Merge(arr, left, mid, right, tmp);
+
+}
+
+void MergeSort(std::vector<int>& arr)
+{
+    // 建立一个 O(N) 的空间
+    std::vector<int> tmp(arr.size(), 0);
+    // 调用 _MergeSort 去划分空间
+    // 给的区间是左闭右开的
     _MergeSort(arr, 0, arr.size(), tmp);
 }
