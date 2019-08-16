@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <stack>
 
 
 // 插入排序
@@ -137,55 +138,106 @@ void SelectSort(std::vector<int>& arr)
 // 向下调整过程中，无法保证相等数的前后关系
 //
 // 向下调整
-void AdJustDown(std::vector<int>& arr, int size, int root)
-{
-    // 如果此时 root 是叶子结点，调整结束退出
-    if (root * 2 + 1 >= size)
-        return;
+// void AdJustDown(std::vector<int>& arr, int size, int root)
+// {
+//     // 如果此时 root 是叶子结点，调整结束退出
+//     if (root * 2 + 1 >= size)
+//         return;
+// 
+//     // 找到最大的孩子
+//     int left = (root * 2) + 1;
+//     int max = left;
+//     int right = (root * 2) + 2;
+//     if (right < size && arr[right] > arr[left])
+//     {
+//         max = right;
+//     }
+// 
+//     // 判断当前 root 是否小于叶子结点
+//     if (arr[root] < arr[max])
+//     {
+//         std::swap(arr[root], arr[max]);
+//         AdJustDown(arr, size, max);
+//     }
+//     
+//     return;
+// }
+// // 建堆
+// void CreateHeap(std::vector<int>& arr)
+// {
+//     // 从第一个双亲结点开始向下调整
+//     // 逐渐向上走，直到根结点向下调整结束
+//     for (int i = (int)(arr.size() - 2) / 2; i >= 0; i--)
+//     {
+//         AdJustDown(arr, (int)arr.size(), i);
+//     }
+// }
+// // 堆排序
+// void HeapSort(std::vector<int>& arr)
+// {
+//     // 先建堆
+//     CreateHeap(arr);
+// 
+//     // 然后每次将堆顶元素和最后一个元素交换
+//     // size - 1
+//     // 向下调整
+//     for (int i = 0; i < (int)arr.size(); i++)
+//     {
+//         std::swap(arr[0], arr[arr.size() - i - 1]);
+// 
+//         AdJustDown(arr, arr.size() - i - 1, 0);
+// 
+//     }
+// }
 
-    // 找到最大的孩子
-    int left = (root * 2) + 1;
-    int max = left;
-    int right = (root * 2) + 2;
-    if (right < size && arr[right] > arr[left])
+// 向下调整
+void AdjustDown(std::vector<int>& arr, int size, int root)
+{
+    // 如果此时的结点是叶子结点退出
+    if (root * 2 + 1 >= size)
     {
-        max = right;
+        return;
     }
 
-    // 判断当前 root 是否小于叶子结点
+    int max = root * 2 + 1;
+    if (root * 2 + 2 < size && arr[root * 2 + 2] > arr[root * 2 + 1])
+    {
+        max += 1;
+    }
+
+    // 比较当前结点和最大的叶子结点的大小
     if (arr[root] < arr[max])
     {
         std::swap(arr[root], arr[max]);
-        AdJustDown(arr, size, max);
+
+        AdjustDown(arr, size, max);
     }
-    
+
     return;
 }
+
 // 建堆
 void CreateHeap(std::vector<int>& arr)
 {
-    // 从第一个双亲结点开始向下调整
-    // 逐渐向上走，直到根结点向下调整结束
-    for (int i = (int)(arr.size() - 2) / 2; i >= 0; i--)
+    // 从最后一个非叶子结点开始向下调整
+    for (int i = (arr.size() - 2) / 2; i >= 0; i--)
     {
-        AdJustDown(arr, (int)arr.size(), i);
+        AdjustDown(arr, arr.size(), i);
     }
 }
-// 堆排序
+
+// 排序
 void HeapSort(std::vector<int>& arr)
 {
     // 先建堆
     CreateHeap(arr);
 
-    // 然后每次将堆顶元素和最后一个元素交换
-    // size - 1
-    // 向下调整
-    for (int i = 0; i < (int)arr.size(); i++)
+    // 将堆顶元素和最后一个元素交换，进行减置算法
+    for (int i = 0; i < arr.size() - 1; i++)
     {
-        std::swap(arr[0], arr[arr.size() - i - 1]);
+        std::swap(arr[0], arr[arr.size() - 1 - i]);
 
-        AdJustDown(arr, arr.size() - i - 1, 0);
-
+        AdjustDown(arr, arr.size() - i - 1, 0);
     }
 }
 
@@ -255,6 +307,7 @@ void BubbleSort(std::vector<int>& arr)
 
 // Parition 三种方式
 // hoare 版本
+#if 0
 int Parition(std::vector<int>& arr, int left, int right)
 {
     int div = right;
@@ -358,11 +411,87 @@ void _QuickSort(std::vector<int>& arr, int left, int right)
     _QuickSort(arr, left, div - 1);     
     _QuickSort(arr, div + 1, right);
 }
+#endif
+
+int parition(std::vector<int>& arr, int left, int right)
+{
+    int div = right;
+
+    // 大循环调整
+    while (left < right)
+    {
+        // 从左边找一个比基准值大的
+        while (left < right && arr[left] <= arr[div])
+        {
+            left++;
+        }
+
+        // 从右边找一个比基准值小的
+        while (left < right && arr[right] >= arr[div])
+        {
+            right--;
+        }
+
+        if (left < right)
+        {
+            std::swap(arr[left], arr[right]);
+        }
+    }
+
+    // 走到这说明 left 和 right 重合 
+    std::swap(arr[left], arr[div]);
+    return left;
+}
+
+// 左闭右闭
+void _QuickSort(std::vector<int>& arr, int left, int right)
+{
+    if (left >= right)
+    {
+        return;
+    }
+
+    int div = parition(arr, left, right);
+
+    _QuickSort(arr, left, div - 1);
+    _QuickSort(arr, div + 1, right);
+}
+
+void __QuickSort(std::vector<int>& arr, int left, int right)
+{
+    std::stack<int> s;
+    s.push(left);
+    s.push(right);
+
+    while (!s.empty())
+    {
+        int c_right = s.top();
+        s.pop();
+        int c_left = s.top();
+        s.pop();
+
+        int div = parition(arr, c_left, c_right);
+        
+        if (c_left < div - 1)
+        {
+            s.push(c_left);
+            s.push(div - 1);
+        }
+
+        if (div + 1 < c_right)
+        {
+            s.push(div + 1);
+            s.push(c_right);
+        }
+    }
+}
 
 void QuickSort(std::vector<int>& arr)
 {
-    _QuickSort(arr, 0, (int)arr.size() - 1);
+    __QuickSort(arr, 0, (int)arr.size() - 1);
 }
+
+
 
 
 

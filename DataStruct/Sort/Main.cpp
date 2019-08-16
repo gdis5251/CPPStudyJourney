@@ -24,13 +24,13 @@ int main(void)
     // SelectSort(arr);
     // PrintArray(arr);
 
-    // HeapSort(arr);
+     HeapSort(arr);
     // PrintArray(arr);
 
     // BubbleSort(arr);
     
     // QuickSort(arr);
-    MergeSort(arr);
+    // MergeSort(arr);
     PrintArray(arr);
     return 0;
 }
